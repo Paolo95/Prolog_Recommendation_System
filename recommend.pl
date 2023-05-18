@@ -18,9 +18,11 @@ start :-
     read(Ans2), nl,
     ask3, nl, 
     read(Ans3), nl,
+    ask4, nl,
+    read(Ans4), nl,
     % print the first 50 matched products
     write('we recommend following products:'), nl,
-    forall(limit(50, distinct(recommend(Ans1, Ans2, Ans3, F))), writeln(F)).
+    forall(limit(50, distinct(recommend(Ans1, Ans2, Ans3, Ans4, F))), writeln(F)).
 
 
 ask1 :-
@@ -44,8 +46,7 @@ ask3 :-
     write("0. Doesn't matter").
 
 ask4 :-
-    write("Type a list of searched products in the past."), nl,
-    write("0. I don't have past searches").
+    write("Write your recent searches, type """" if you don't have recent searches"), nl.
 
 % q1(0, _) is always true since no preference
 q1(0, _).
@@ -96,11 +97,17 @@ q3(2, ID) :-
 % handle invalid input
 q3(Op, _) :- not( member(Op, [0, 1, 2]) ). 
 
+q4(Op, ID) :- split_string(Op, " ", "", X),
+             ( member("iPhone", X) ; member("Samsung", X) ->
+                 db(ID, category, 'Smartphone')
+                 ;
+                 write('')).
 
 % Bebug: recommend(2, 1, 0, 0, 0, F). -- returns all matches to modern emotional films
 %   to add more questions, simply add another parameter and define all possible qn()'s for that question
-recommend(Ans1, Ans2, Ans3, Filmname) :-
-    db(ID, name, Filmname),
+recommend(Ans1, Ans2, Ans3, Ans4, Productname) :-
+    db(ID, name, Productname),
     q1(Ans1, ID),
     q2(Ans2, ID),
-    q3(Ans3, ID).
+    q3(Ans3, ID),
+    q4(Ans4, ID).

@@ -37,7 +37,7 @@ addTitle(_,_,_,_,_,_,'').
 
 % skip not in stock products
 addTitle(_,_,_,_,_,_,QtyInStock) :-
-    QtyInStock > 0.
+    QtyInStock == 0.
 
 
 addTitle(ID, Category, Status, Name, Price, Rating, QtyInStock) :-
