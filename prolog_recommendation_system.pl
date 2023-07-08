@@ -142,7 +142,7 @@ recommend(User, MinPrice, MaxPrice, Recommendation) :-
 
 format_recommendations([], []).
 format_recommendations([[Product, Category, Price]|Tail], [Formatted|Result]) :-
-    format(atom(Formatted), "~w, Category: ~w, Price: ~2f", [Product, Category, Price]),
+    format(atom(Formatted), "Product Name: ~w, Category: ~w, Price: ~2f", [Product, Category, Price]),
     format_recommendations(Tail, Result).
 
 remove_duplicates([], []).
