@@ -117,14 +117,15 @@ price(samsung_QE50Q60BAUXZT, 489.99).
 
 
 % RULES
-recommend(User, MinPrice, MaxPrice, Recommendation) :-
+recommend(User, MinPrice, MaxPrice, CategoryFilter, Recommendation) :-
     search_history(User, SearchHistory),
     findall([Product, Category, Price], (
         member(Product, SearchHistory),
         category(Product, Category),
         price(Product, Price),
         (MinPrice =< 0.0 ; Price >= MinPrice),
-        (MaxPrice =< 0.0 ; Price =< MaxPrice)
+        (MaxPrice =< 0.0 ; Price =< MaxPrice),
+        (CategoryFilter = 'skip' ; CategoryFilter = Category)
     ), Recommendations),
     findall([RelatedProduct, Category, RelatedPrice], (
         member(Product, SearchHistory),
@@ -133,7 +134,8 @@ recommend(User, MinPrice, MaxPrice, Recommendation) :-
         price(RelatedProduct, RelatedPrice),
         \+ member([RelatedProduct, _, _], Recommendations),
         (MinPrice =< 0.0 ; RelatedPrice >= MinPrice),
-        (MaxPrice =< 0.0 ; RelatedPrice =< MaxPrice)
+        (MaxPrice =< 0.0 ; RelatedPrice =< MaxPrice),
+        (CategoryFilter = 'skip' ; CategoryFilter = Category)
     ), RelatedRecommendations),
     append(Recommendations, RelatedRecommendations, AllRecommendations),
     sort(AllRecommendations, SortedRecommendations),
@@ -163,7 +165,9 @@ main :-
     write('Enter the maximum price (or type "skip" to skip): '),
     read(MaxPriceInput),
     parse_price_input(MaxPriceInput, MaxPrice),
-    recommend(User, MinPrice, MaxPrice, Recommendations),
+    write('Enter the category (or type "skip" to skip): '),
+    read(CategoryFilter),
+    recommend(User, MinPrice, MaxPrice, CategoryFilter, Recommendations),
     nl,
     write('Recommendations for '), write(User), write(':'), nl,
     print_recommendations(Recommendations).
