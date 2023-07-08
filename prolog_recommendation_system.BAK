@@ -175,7 +175,7 @@ parse_price_input(Value, ParsedValue) :-
 
 print_recommendations([]) :-
     nl,
-    write('No suggestions.'), nl.
+    write('No suggestions for mark.').
 print_recommendations(Recommendations) :-
     print_recommendations_list(Recommendations).
 
