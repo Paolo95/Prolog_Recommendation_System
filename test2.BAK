@@ -1,7 +1,8 @@
 % Facts
-search_history(john, [iphone_14, realme_c53, xiaomi_redmi_note_12_pro, galaxy_tab_a8]).
-search_history(lisa, [galaxy_tab_a8]).
-search_history(mark, [iphone_14]).
+search_history(john, [iphone_14, realme_c53, xiaomi_redmi_note_12_pro, ipad_13]).
+search_history(lisa, [shoes, dress, handbag]).
+search_history(mark, [phone, headphones, laptop]).
+search_history(sarah, [dress, shoes, jewelry]).
 
 category(iphone_14, smartphone).
 category(samsung_galaxy_a34, smartphone).
@@ -24,19 +25,10 @@ category(motorola_edge_30, smartphone).
 category(iphone_13_mini, smartphone).
 category(realme_10, smartphone).
 
-category(galaxy_tab_a8, tablet).
-category(galaxy_tab_a7, tablet).
-category(galaxy_tab_s8, tablet).
-category(ipad_10_2, tablet).
-category(galaxy_tab_s6, tablet).
-category(mediacom_x10, tablet).
-category(lenovo_m10, tablet).
-category(galaxy_tab_s7, tablet).
-category(lenovo_p11, tablet).
-category(galaxy_tab_s6_lite, tablet).
-
-
-
+category(ipad_13, tablet).
+category(ipad_12, tablet).
+category(galaxy_pad, tablet).
+category(galaxy_pad_2, tablet).
 
 price(iphone_14, 859.0).
 price(samsung_galaxy_a34, 305.99).
@@ -130,12 +122,7 @@ parse_price_input(Value, ParsedValue) :-
     number(Value),
     ParsedValue is float(Value).
 
-print_recommendations([]) :-
-    write('No suggestions for mark.').
-print_recommendations(Recommendations) :-
-    print_recommendations_list(Recommendations).
-
-print_recommendations_list([]).
-print_recommendations_list([Recommendation|Tail]) :-
+print_recommendations([]) :- !.  % Skip printing when there are no recommendations
+print_recommendations([Recommendation|Tail]) :-
     write('- '), write(Recommendation), nl,
-    print_recommendations_list(Tail).
+    print_recommendations(Tail).
