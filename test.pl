@@ -1,0 +1,106 @@
+% Facts
+search_history(john, [iphone_14, realme_c53, xiaomi_redmi_note_12_pro]).
+search_history(lisa, [shoes, dress, handbag]).
+search_history(mark, [phone, headphones, laptop]).
+search_history(sarah, [dress, shoes, jewelry]).
+
+category(iphone_14, smartphone).
+category(samsung_galaxy_a34, smartphone).
+category(samsung_galaxy_a54, smartphone).
+category(samsung_galaxy_a14, smartphone).
+category(xiaomi_redmi_12C, smartphone).
+category(iphone_11, smartphone).
+category(iphone_14_pro, smartphone).
+category(samsung_galaxy_s23, smartphone).
+category(xiaomi_redmi_note_12_pro, smartphone).
+category(motorola_g23, smartphone).
+category(xiaomi_redmi_note_12, smartphone).
+category(iphone_14_pro_max, smartphone).
+category(xiaomi_redmi_note_12, smartphone).
+category(xiaomi_redmi_10C, smartphone).
+category(iphone_13_mini, smartphone).
+category(realme_11_pro, smartphone).
+category(realme_c53, smartphone).
+category(motorola_edge_30, smartphone).
+category(iphone_13_mini, smartphone).
+category(realme_10, smartphone).
+
+
+category(ipad_13, tablet).
+category(ipad_12, tablet).
+category(galaxy_pad, tablet).
+category(galaxy_pad_2, tablet).
+
+price(iphone_14, 859.0).
+price(samsung_galaxy_a34, 305.99).
+price(samsung_galaxy_a54, 449.99).
+price(samsung_galaxy_a14, 152.99).
+price(xiaomi_redmi_12C, 122.99).
+price(iphone_11, 554.99).
+price(iphone_14_pro, 1199.0).
+price(samsung_galaxy_s23, 1299.0).
+price(xiaomi_redmi_note_12_pro, 120.0).
+price(motorola_g23, 179.0).
+price(xiaomi_redmi_note_12, 199.0).
+price(iphone_14_pro_max, 1349.0).
+price(xiaomi_redmi_note_12, 199.0).
+price(xiaomi_redmi_10C, 99.0).
+price(iphone_13_mini, 749.0).
+price(realme_11_pro, 449.99).
+price(realme_c53, 179.0).
+price(motorola_edge_30, 269.99).
+price(iphone_13_mini, 749.0).
+price(realme_10, 229.99).
+
+price(ipad_13, 200.0).
+price(ipad_12, 90.0).
+price(galaxy_pad, 190.0).
+price(galaxy_pad_2, 100.0).
+
+
+
+% Rules
+recommend(User, MinPrice, MaxPrice, Recommendation) :-
+    search_history(User, SearchHistory),
+    findall([Product, Category, Price], (
+        member(Product, SearchHistory),
+        category(Product, Category),
+        price(Product, Price),
+        (MinPrice =< 0.0 ; Price >= MinPrice),
+        (MaxPrice =< 0.0 ; Price =< MaxPrice)
+    ), Recommendations),
+    sort(2, @=<, Recommendations, SortedRecommendations),
+    format_recommendations(SortedRecommendations, Recommendation).
+
+format_recommendations([], []).
+format_recommendations([[Product, Category, Price]|Tail], [Formatted|Result]) :-
+    format(atom(Formatted), "~w, Category: ~w, Price: ~2f", [Product, Category, Price]),
+    format_recommendations(Tail, Result).
+
+% Query for username and price range
+:- initialization(main).
+
+main :-
+    write('Enter your username: '),
+    read(User),
+    write('Enter the minimum price (or type "skip" to skip): '),
+    read(MinPriceInput),
+    parse_price_input(MinPriceInput, MinPrice),
+    write('Enter the maximum price (or type "skip" to skip): '),
+    read(MaxPriceInput),
+    parse_price_input(MaxPriceInput, MaxPrice),
+    recommend(User, MinPrice, MaxPrice, Recommendations),
+    write('Recommendations for '), write(User), write(':'), nl,
+    print_recommendations(Recommendations).
+
+parse_price_input(skip, -1.0) :- !.
+parse_price_input(Value, ParsedValue) :-
+    number(Value),
+    ParsedValue is float(Value).
+
+print_recommendations([]) :-
+    write('No suggestions available.').
+print_recommendations([Recommendation|Tail]) :-
+    write('- '), write(Recommendation), nl,
+    print_recommendations(Tail).
+
