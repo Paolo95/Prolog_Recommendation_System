@@ -114,9 +114,7 @@ parse_price_input(Value, ParsedValue) :-
     number(Value),
     ParsedValue is float(Value).
 
-print_recommendations([]) :-
-    write('No suggestions available.').
+print_recommendations([]) :- !.  % Skip printing when there are no recommendations
 print_recommendations([Recommendation|Tail]) :-
     write('- '), write(Recommendation), nl,
     print_recommendations(Tail).
-
