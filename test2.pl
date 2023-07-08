@@ -1,8 +1,26 @@
-% Facts
-search_history(john, [iphone_14, realme_c53, xiaomi_redmi_note_12_pro, galaxy_tab_a8]).
+% FACTS
+
+% SEARCH HISTORY OF USERS
+
+% JOHN IS AN USER THAT SEARCHED SMARTPHONE AND TABLET
+search_history(john, [iphone_14, galaxy_tab_a8]).
+
+% LISA IS AN USER THAT SEARCHED A TABLET
 search_history(lisa, [galaxy_tab_a8]).
+
+% MARK IS AN USER THAT SEARCHED A SMARTPHONE
 search_history(mark, [iphone_14]).
 
+% PAUL IS AN USER THAT SEARCHED TV
+search_history(paul, [ok_24GH_5023C]).
+
+% MAX IS AN USER THAT SEARCHED TV AND TABLET
+search_history(max, [ok_24GH_5023C, galaxy_tab_a8]).
+
+% CHARLES IS AN USER THAT SEARCHED SMARTPHONE AND TV
+search_history(charles, [iphone_14, sony_KD50X75WL]).
+
+% CATEGORIZATION OF SMARTPHONE PRODUCTS
 category(iphone_14, smartphone).
 category(samsung_galaxy_a34, smartphone).
 category(samsung_galaxy_a54, smartphone).
@@ -24,6 +42,7 @@ category(motorola_edge_30, smartphone).
 category(iphone_13_mini, smartphone).
 category(realme_10, smartphone).
 
+% CATEGORIZATION OF TABLET PRODUCTS
 category(galaxy_tab_a8, tablet).
 category(galaxy_tab_a7, tablet).
 category(galaxy_tab_s8, tablet).
@@ -35,9 +54,20 @@ category(galaxy_tab_s7, tablet).
 category(lenovo_p11, tablet).
 category(galaxy_tab_s6_lite, tablet).
 
+% CATEGORIZATION OF TV PRODUCTS
+category(ok_24GH_5023C, tv).
+category(philips_24PFS5535_12, tv).
+category(panasonic_TX24MS350E, tv).
+category(samsung_QE50Q80BATXZT, tv).
+category(lg_uhd_43UR78006LK, tv).
+category(panasonic_TX24G310E, tv).
+category(xiaomi_P1_E_32, tv).
+category(sony_KD43X80L, tv).
+category(samsung_UE55AU7090UXZT, tv).
+category(sony_KD50X75WL, tv).
+category(samsung_QE50Q60BAUXZT, tv).
 
-
-
+% SMARTPHONE PRODUCTS' PRICE FACTS
 price(iphone_14, 859.0).
 price(samsung_galaxy_a34, 305.99).
 price(samsung_galaxy_a54, 449.99).
@@ -59,6 +89,7 @@ price(motorola_edge_30, 269.99).
 price(iphone_13_mini, 749.0).
 price(realme_10, 229.99).
 
+% TABLET PRODUCTS' PRICE FACTS
 price(galaxy_tab_a8, 229.99).
 price(galaxy_tab_a7, 149.0).
 price(galaxy_tab_s8, 649.0).
@@ -70,10 +101,22 @@ price(galaxy_tab_s7, 459.0).
 price(lenovo_p11, 299.99).
 price(galaxy_tab_s6_lite, 399.99).
 
+% TV PRODUCTS' PRICE FACTS
+
+price(ok_24GH_5023C, 119.99).
+price(philips_24PFS5535_12, 259.99).
+price(panasonic_TX24MS350E, 229.99).
+price(samsung_QE50Q80BATXZT, 510.99).
+price(lg_uhd_43UR78006LK, 329.99).
+price(panasonic_TX24G310E, 159.99).
+price(xiaomi_P1_E_32, 179.99).
+price(sony_KD43X80L, 799.99).
+price(samsung_UE55AU7090UXZT, 398.99).
+price(sony_KD50X75WL, 599.99).
+price(samsung_QE50Q60BAUXZT, 489.99).
 
 
-
-% Rules
+% RULES
 recommend(User, MinPrice, MaxPrice, Recommendation) :-
     search_history(User, SearchHistory),
     findall([Product, Category, Price], (
@@ -109,7 +152,6 @@ remove_duplicates([[Product, Category, Price]|Tail], Result) :-
     member([Product, Category, Price], Tail),
     remove_duplicates(Tail, Result).
 
-% Query for username and price range
 :- initialization(main).
 
 main :-
@@ -122,6 +164,7 @@ main :-
     read(MaxPriceInput),
     parse_price_input(MaxPriceInput, MaxPrice),
     recommend(User, MinPrice, MaxPrice, Recommendations),
+    nl,
     write('Recommendations for '), write(User), write(':'), nl,
     print_recommendations(Recommendations).
 
@@ -131,6 +174,7 @@ parse_price_input(Value, ParsedValue) :-
     ParsedValue is float(Value).
 
 print_recommendations([]) :-
+    nl,
     write('No suggestions for mark.').
 print_recommendations(Recommendations) :-
     print_recommendations_list(Recommendations).
