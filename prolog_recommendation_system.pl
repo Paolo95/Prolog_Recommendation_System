@@ -184,10 +184,17 @@ main :-
             parse_price_input(MaxPriceInput, MaxPrice),
             write('Enter the category (or type "skip" to skip): '),
             read(CategoryFilter),
-            recommend(User, MinPrice, MaxPrice, CategoryFilter, Recommendations),
-            nl,
-            write('Recommendations for '), write(User), write(':'), nl,
-            print_recommendations(Recommendations)
+            (   category_exists(CategoryFilter)
+            ->  recommend(User, MinPrice, MaxPrice, CategoryFilter, Recommendations),
+                nl,
+                write('Recommendations for '), write(User), write(':'), nl,
+                print_recommendations(Recommendations)
+            ;   write('Category not found. Using "skip" for category filter.'), nl,
+                recommend(User, MinPrice, MaxPrice, 'skip', Recommendations),
+                nl,
+                write('Recommendations for '), write(User), write(':'), nl,
+                print_recommendations(Recommendations)
+            )
         )
     ;   write('User not found.')
     ).
@@ -195,8 +202,11 @@ main :-
 % Parse the price input, converting "skip" to -1.0
 parse_price_input(skip, -1.0) :- !.
 parse_price_input(Value, ParsedValue) :-
-    number(Value),
-    ParsedValue is float(Value).
+    (   number(Value)
+    ->  ParsedValue is float(Value)
+    ;   write('Invalid price input. Skipping price filter.'), nl,
+        ParsedValue = -1.0
+    ).
 
 % Print the list of recommendations
 print_recommendations([]) :-
@@ -210,3 +220,8 @@ print_recommendations_list([]).
 print_recommendations_list([Recommendation|Tail]) :-
     write('- '), write(Recommendation), nl,
     print_recommendations_list(Tail).
+
+% Check if a category exists
+category_exists(Category) :-
+    category(_, Category).
+
