@@ -118,8 +118,6 @@ price(samsung_UE55AU7090UXZT, 398.99).
 price(sony_KD50X75WL, 599.99).
 price(samsung_QE50Q60BAUXZT, 489.99).
 
-
-
 % RULES
 
 % The recommend/5 predicate recommends products to a user based on their search history,
@@ -164,9 +162,7 @@ format_recommendations([[Product, Category, Price]|Tail], [Formatted|Result]) :-
 remove_duplicates([], []).
 remove_duplicates([[Product, Category, Price]|Tail], [[Product, Category, Price]|Result]) :-
     remove_duplicates(Tail, Result).
-remove_duplicates([[Product, Category, Price]|Tail], Result) :-
-    member([Product, Category, Price], Tail),
-    remove_duplicates(Tail, Result).
+
 
 % Main entry point of the program
 :- initialization(main).
